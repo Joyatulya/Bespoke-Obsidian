@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, type TFile } from 'obsidian';
 
 // Remember to rename these classes and interfaces!
 
@@ -10,23 +10,29 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 	mySetting: 'default'
 }
 
+const base_folder : TFile = {
+	path: '1. Rough/High Risk ECGs.md'
+}
+
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
 
 	async onload() {
 		await this.loadSettings();
 
+
 		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
+		const ribbonIconEl = this.addRibbonIcon('dice', 'Bespoke', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
+			new Notice('Bespoke');
 		});
+
 		// Perform additional things with the ribbon
-		ribbonIconEl.addClass('my-plugin-ribbon-class');
+		// ribbonIconEl.addClass('my-plugin-ribbon-class');
 
 		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		const statusBarItemEl = this.addStatusBarItem();
-		statusBarItemEl.setText('Status Bar Text');
+		// const statusBarItemEl = this.addStatusBarItem();
+		// statusBarItemEl.setText('Status Bar Text');
 
 		// This adds a simple command that can be triggered anywhere
 		this.addCommand({
@@ -65,6 +71,16 @@ export default class MyPlugin extends Plugin {
 			}
 		});
 
+		this.addCommand({
+			id: 'open-goals',
+			name: 'Open goals',
+			callback: () => {
+				const ws = this.app.workspace
+				const leaf = ws.getLeaf(true)
+			}
+		})
+
+
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new SampleSettingTab(this.app, this));
 
@@ -79,7 +95,6 @@ export default class MyPlugin extends Plugin {
 	}
 
 	onunload() {
-
 	}
 
 	async loadSettings() {
@@ -98,7 +113,7 @@ class SampleModal extends Modal {
 
 	onOpen() {
 		const {contentEl} = this;
-		contentEl.setText('Woah!');
+		contentEl.setText('Modal is open');
 	}
 
 	onClose() {
